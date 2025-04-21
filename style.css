@@ -86,6 +86,9 @@ main{
   color: white !important;
   border: none;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  padding: .5;
+  display: flex;
+  flex-wrap: wrap;
 }
 .mdc-button.mdc-button--raised:focus,
 .mdc-button.mdc-button--raised:active {
