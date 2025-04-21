@@ -136,7 +136,7 @@
       el.classList.remove('temporary-disabled');
     });
     clearTimeout(timeTurnId)
-
+    document.getElementById("result").classList.remove('correct', 'wrong');
   }
   function showDialog(title, content) {
     return new Promise((resolve) => {
@@ -158,22 +158,19 @@
     });
 }
   async function checkAnswer(answer) {
-
     const verb = verbsList[randomIndex];
     if (!verb) { return }
-    document.getElementById("result").classList.remove('correct', 'wrong');
+    
     if (['give up', 'carry on'].includes(verb.base)) {
       await showDialog(
             "NOTICE",
             "All phrasal verbs which are followed by another verb, e.g. carry on, give up, etc. are followed by the gerund."
         );
-      
     } else if (verb.base === ('help')) {
       await showDialog(
             "NOTICE",
             "Help can be followed by the infinitive with or without to. The organization I work for helps young people (to) find work abroad."
         );
-    
     }
     if (answer === verb.correct) {
       document.getElementById("result").classList.add('correct');
@@ -185,21 +182,22 @@
       document.getElementById("result").textContent =
         "Wrong. " + verb.example;
     }
-   
     document.getElementById("score").textContent = `Score: ${score}`;
-    wipeList();
     document.querySelectorAll('.mdc-button').forEach((el) => {
       el.disabled = true;
       el.classList.add('temporary-disabled');
     });
-    timeTurnId = setTimeout(loadVerb, 2500);
+    const lastVerb =wipeList();
+    if(lastVerb){
+      timeTurnId = setTimeout( await gameOver(), 2500);
+    }else{
+      timeTurnId = setTimeout(loadVerb, 2500);
+    }
+    
   }
-  function wipeList() {
+   function wipeList() {
     verbsList.splice(randomIndex, 1);
     if (verbsList.length === 0) {
-      gameOver();
-
-
       return true
     }
     return false
@@ -215,11 +213,10 @@
     const progressContainer = document.getElementById("progress-container");
     progressContainer.style.display = "none"; // Oculta el contenedor
   }// Función para mostrar el Game Over
-  function gameOver() {
-
+  async function gameOver() {
+    return new Promise((resolve) => {
     isGameOverDialog = true;
     const percent = ((score / originalVerbsList.length) * 100).toFixed(2);
-
     showProgress();
     document.getElementById("dialog-title").textContent = "GAME OVER!";
     document.getElementById("dialog-content").textContent = `Score: ${score} out of ${originalVerbsList.length} (${percent}%)`;
@@ -227,7 +224,14 @@
     document.getElementById("progressBar").value = percent;
     document.getElementById("progressText").textContent = `${percent}%`;
     dialog.open(); // Mostramos el diálogo de Game Over
+    
+    const onClose = () => {
+      dialog.unlisten('MDCDialog:closed', onClose);
+      resolve();
+    };
 
+    dialog.listen('MDCDialog:closed', onClose);
+    });
   }
 
   document.getElementById("gerundButton").addEventListener("click", () => checkAnswer("gerund"));
