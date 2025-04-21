@@ -189,12 +189,12 @@
     });
     const lastVerb =wipeList();
     if(lastVerb){
-      timeTurnId = setTimeout( await gameOver(), 2500);
-    }else{
+      await gameOver()
+    }
       timeTurnId = setTimeout(loadVerb, 2500);
     }
     
-  }
+  
    function wipeList() {
     verbsList.splice(randomIndex, 1);
     if (verbsList.length === 0) {
@@ -217,14 +217,25 @@
     return new Promise((resolve) => {
     isGameOverDialog = true;
     const percent = ((score / originalVerbsList.length) * 100).toFixed(2);
+    const restartButton = document.getElementById("restart-button");
     showProgress();
     document.getElementById("dialog-title").textContent = "GAME OVER!";
     document.getElementById("dialog-content").textContent = `Score: ${score} out of ${originalVerbsList.length} (${percent}%)`;
-    document.getElementById("restart-button").textContent = "Reiniciar"; // Cambiamos el texto del botón a "Reiniciar"
+    restartButton.textContent = "Reiniciar"; // Cambiamos el texto del botón a "Reiniciar"
     document.getElementById("progressBar").value = percent;
     document.getElementById("progressText").textContent = `${percent}%`;
-    dialog.open(); // Mostramos el diálogo de Game Over
-    
+   
+   
+    restartButton.style.display = "inline-block";
+    restartButton.disabled = false;
+    restartButton.setAttribute("tabindex", "0");
+
+    const dialogEl = document.querySelector("#dialog-close");
+    dialogEl.style.display = "block";
+    dialogEl.style.visibility = "visible";
+    setTimeout(() => {
+      dialog.open();
+    }, 2000);
     const onClose = () => {
       dialog.unlisten('MDCDialog:closed', onClose);
       resolve();
