@@ -26,7 +26,7 @@
 
   <!-- Contenido Principal -->
   <main class="mdc-top-app-bar--fixed-adjust">
-    <div class="mdc-dialog" id="dialog-renew" role="alertdialog" aria-modal="true" aria-labelledby="dialog-title"
+    <div class="mdc-dialog" id="dialog-close" role="alertdialog" aria-modal="true" aria-labelledby="dialog-title"
       aria-describedby="dialog-content">
       <div class="mdc-dialog__container">
         <div class="mdc-dialog__surface">
@@ -101,7 +101,7 @@
   let score = 0;
   let dialog;
   document.addEventListener('DOMContentLoaded', () => {
-    const dialogElement = document.querySelector('#dialog-renew');
+    const dialogElement = document.querySelector('#dialog-close');
     dialog = new mdc.dialog.MDCDialog(dialogElement);
     dialog.listen('MDCDialog:closed', (event) => {
 
@@ -138,15 +138,46 @@
     clearTimeout(timeTurnId)
 
   }
+  function showDialog(title, content) {
+    return new Promise((resolve) => {
+        const dialogTitle = document.getElementById("dialog-title");
+        const dialogContent = document.getElementById("dialog-content");
+        const closeButton = document.getElementById("dialog-close");
 
-  function checkAnswer(answer) {
+        dialogTitle.textContent = title;
+        dialogContent.textContent = content;
+
+        dialog.open(); // o dialog.showModal() según el componente
+
+        const onClose = () => {
+      dialog.unlisten('MDCDialog:closed', onClose);
+      resolve();
+    };
+
+    dialog.listen('MDCDialog:closed', onClose);
+    });
+}
+  async function checkAnswer(answer) {
 
     const verb = verbsList[randomIndex];
     if (!verb) { return }
     document.getElementById("result").classList.remove('correct', 'wrong');
+    if (['give up', 'carry on'].includes(verb.base)) {
+      await showDialog(
+            "NOTICE",
+            "All phrasal verbs which are followed by another verb, e.g. carry on, give up, etc. are followed by the gerund."
+        );
+      
+    } else if (verb.base === ('help')) {
+      await showDialog(
+            "NOTICE",
+            "Help can be followed by the infinitive with or without to. The organization I work for helps young people (to) find work abroad."
+        );
+    
+    }
     if (answer === verb.correct) {
-      score++;
       document.getElementById("result").classList.add('correct');
+      score++;
       document.getElementById("result").textContent =
         "Correct! " + verb.example;
     } else {
@@ -154,22 +185,14 @@
       document.getElementById("result").textContent =
         "Wrong. " + verb.example;
     }
-    if (['give up', 'carry on'].includes(verb.base)) {
-      document.getElementById("dialog-title").textContent = `NOTICE`;
-      document.getElementById("dialog-content").textContent = `All phrasal verbs wich are followed by another verb, e.g. carry on. give up, etc. are followed by the gerund`;
-      dialog.open();
-    } else if (verb.base === ('help')) {
-      document.getElementById("dialog-title").textContent = `NOTICE`;
-      document.getElementById("dialog-content").textContent = `Help can be followed by the infinitive with or without to. The organization I work for helps young people (to) find work abroad`;
-      dialog.open();
-    }
+   
     document.getElementById("score").textContent = `Score: ${score}`;
     wipeList();
     document.querySelectorAll('.mdc-button').forEach((el) => {
       el.disabled = true;
       el.classList.add('temporary-disabled');
     });
-    timeTurnId = setTimeout(loadVerb, 3000);
+    timeTurnId = setTimeout(loadVerb, 2500);
   }
   function wipeList() {
     verbsList.splice(randomIndex, 1);
