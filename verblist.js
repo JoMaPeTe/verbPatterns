@@ -189,7 +189,7 @@ const   originalVerbsList= [
     },
     {
       base: "help",
-      correct: "infinitive",
+      correct: "infinitiveWith&WithoutTo",
       example: "She helped me to carry the bags.",
     },
     {
@@ -272,7 +272,7 @@ const   originalVerbsList= [
     { base: "can", correct: "infinitive_without_to", example: "Can you help me carry these suitcases?" },
     { base: "had better", correct: "infinitive_without_to", example: "You'd better leave now if you want to catch the train" },
     { base: "let", correct: "infinitive_without_to", example: "Let me pay for coffe - it must be my turn." },
-    { base: "make", correct: "infinitive_without_to", example: "Sue make her two teenagers do the washing-up every evening afeter dinner" },
+    { base: "make", correct: "infinitive_without_to", example: "Sue make her two teenagers do the washing-up every evening after dinner" },
     { base: "may", correct: "infinitive_without_to", example: "There's a lot of traffic today, so we may be a bit late" },
     { base: "might", correct: "infinitive_without_to", example: "It might rain tomorrow, so please bring an umbrella or a raincoat" },
     { base: "must", correct: "infinitive_without_to", example: "I must remember to phone Harry - It's his birthday today" },

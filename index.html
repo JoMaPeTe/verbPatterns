@@ -1,22 +1,24 @@
 <!DOCTYPE html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Verb Practice Flashcards</title>
-    <link rel="icon" href="./favicon.ico" type="image/x-icon">
-     <!-- Material Design CSS -->
-     <link rel="stylesheet" href="./style.css">
-     <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
-      <link href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css" rel="stylesheet">
-      <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Verb Practice Flashcards</title>
+  <link rel="icon" href="./favicon.ico" type="image/x-icon">
+  <!-- Material Design CSS -->
+  <link rel="stylesheet" href="./style.css">
+  <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
+  <link href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 
 </head>
+
 <body>
-  
+
   <header class="mdc-top-app-bar">
     <div class="mdc-top-app-bar__row">
-      <section class="mdc-top-app-bar__section"  >
+      <section class="mdc-top-app-bar__section">
         <span class="mdc-top-app-bar__title">Verb Pattern Flashcards</span>
       </section>
     </div>
@@ -24,109 +26,195 @@
 
   <!-- Contenido Principal -->
   <main class="mdc-top-app-bar--fixed-adjust">
+    <div class="mdc-dialog" id="dialog-renew" role="alertdialog" aria-modal="true" aria-labelledby="dialog-title"
+      aria-describedby="dialog-content">
+      <div class="mdc-dialog__container">
+        <div class="mdc-dialog__surface">
+          <!-- Título -->
+          <h2 class="mdc-dialog__title" id="dialog-title"></h2>
+          <!-- Contenido -->
+          <div class="mdc-dialog__content" id="dialog-content">
 
-  <div class="card" id="verb">Loading...</div>
-  <div class="result" id="result"></div>
-  
-  <div class="buttons">
-    <div class="mdc-touch-target-wrapper">
-      <button class="mdc-button mdc-button--touch mdc-button--raised" id="gerundButton">
-        <span class="mdc-button__ripple"></span>
-        <span class="mdc-button__touch"></span>
-        <span class="mdc-button__label">+ing</span>
-      </button>
+          </div>
+          <div id="progress-container" style="margin: 1em .5em; display:none">
+            <label for="progressBar">Result:</label>
+            <progress id="progressBar" value="0" max="100" style="width: 100%; height: 20px;"></progress>
+            <div id="progressText" style="text-align: center; font-weight: bold;">0%</div>
+          </div>
+          <!-- Acciones -->
+          <footer class="mdc-dialog__actions">
+            <button type="button" id="restart-button"  class="mdc-button mdc-dialog__button" data-mdc-dialog-action="close">
+              <span class="mdc-button__label">OK</span>
+            </button>
+          </footer>
+        </div>
+      </div>
+      <div class="mdc-dialog__scrim"></div>
     </div>
-    <div class="mdc-touch-target-wrapper">
-      <button class="mdc-button mdc-button--touch mdc-button--raised" id="infinitiveButton" >
-        <span class="mdc-button__ripple"></span>
-        <span class="mdc-button__touch"></span>
-        <span class="mdc-button__label">to + verb</span>
-      </button>
+    <div class="card" id="verb">Loading...</div>
+    <div class="result" id="result"></div>
+
+    <div class="buttons">
+      <div class="mdc-touch-target-wrapper">
+        <button class="mdc-button mdc-button--touch mdc-button--raised" id="gerundButton">
+          <span class="mdc-button__ripple"></span>
+          <span class="mdc-button__touch"></span>
+          <span class="mdc-button__label">+ing</span>
+        </button>
+      </div>
+      <div class="mdc-touch-target-wrapper">
+        <button class="mdc-button mdc-button--touch mdc-button--raised" id="infinitiveButton">
+          <span class="mdc-button__ripple"></span>
+          <span class="mdc-button__touch"></span>
+          <span class="mdc-button__label">to + infinitive</span>
+        </button>
+      </div>
+      <div class="mdc-touch-target-wrapper">
+        <button class="mdc-button mdc-button--touch mdc-button--raised" id="infinitiveWithoutToButton">
+          <span class="mdc-button__ripple"></span>
+          <span class="mdc-button__touch"></span>
+          <span class="mdc-button__label">bare infinitive</span>
+        </button>
+      </div>
+      <div class="mdc-touch-target-wrapper">
+        <button class="mdc-button mdc-button--touch mdc-button--raised" id="infinitiveWith&WithoutToButton">
+          <span class="mdc-button__ripple"></span>
+          <span class="mdc-button__touch"></span>
+          <span class="mdc-button__label">infinitive with & without to</span>
+        </button>
+      </div>
     </div>
-    <div class="mdc-touch-target-wrapper">
-      <button class="mdc-button mdc-button--touch mdc-button--raised" id="infinitiveWithoutToButton">
-        <span class="mdc-button__ripple"></span>
-        <span class="mdc-button__touch"></span>
-        <span class="mdc-button__label">bare infinitive</span>
-      </button>
-    </div>
-  </div>
-  <div class="score" id="score">Score: 0</div>
-</main>
-<footer class="footer">@jomapete projects</footer>
+    <div class="score" id="score">Score: 0</div>
+  </main>
+  <footer class="footer">@jomapete projects</footer>
 </body>
 
 
-    <script type="module" >
-    import originalVerbsList from './verblist.js';
-     
-      let randomIndex = 0;
-      let score = 0;
-     
-      let verbsList = [...originalVerbsList]; // Copiar la lista original
-      let timeTurnId;
-      // Función para obtener un verbo aleatorio sin repeticiones
-      function getRandomIndex() {
-        return Math.floor(Math.random() * verbsList.length);
-      }
-      function setTurnIndex() {
-        randomIndex = getRandomIndex();
-      }
+<script type="module">
+  import originalVerbsList from './verblist.js';
+  let isGameOverDialog = false;
+  let randomIndex = 0;
+  let score = 0;
+  let dialog;
+  document.addEventListener('DOMContentLoaded', () => {
+    const dialogElement = document.querySelector('#dialog-renew');
+    dialog = new mdc.dialog.MDCDialog(dialogElement);
+    dialog.listen('MDCDialog:closed', (event) => {
 
-      function loadVerb() {
-        setTurnIndex();
-        const verb = verbsList[randomIndex];
-        document.getElementById("verb").textContent = verb.base;
-        document.getElementById("result").textContent = "";
-        document.querySelectorAll('.mdc-button').forEach((el) => {
-    el.disabled = false;
-    el.classList.remove('temporary-disabled');
+      if (isGameOverDialog && event.detail.action === 'close') {
+        hideProgress()
+        isGameOverDialog = false;
+        verbsList = [...originalVerbsList];
+        score = 0;
+        document.getElementById('score').textContent = `Score: ${score}`;
+        loadVerb();
+      }
+    });
   });
-      clearTimeout(timeTurnId)
+  let verbsList = [...originalVerbsList]; // Copiar la lista original
+  let timeTurnId;
+  // Función para obtener un verbo aleatorio sin repeticiones
+  function getRandomIndex() {
+    return Math.floor(Math.random() * verbsList.length);
+  }
+  function setTurnIndex() {
+    randomIndex = getRandomIndex();
+  }
 
-      }
+  function loadVerb() {
+    console.log("LENGTH", originalVerbsList.length)
+    setTurnIndex();
+    const verb = verbsList[randomIndex];
+    document.getElementById("verb").textContent = verb?.base ?? "FIN";
+    document.getElementById("result").textContent = "";
+    document.querySelectorAll('.mdc-button').forEach((el) => {
+      el.disabled = false;
+      el.classList.remove('temporary-disabled');
+    });
+    clearTimeout(timeTurnId)
 
-      function checkAnswer(answer) {
+  }
 
-        const verb = verbsList[randomIndex];
-    
-        document.getElementById("result").classList.remove('correct', 'wrong');
-        if (answer === verb.correct) {
-          score++;
-          document.getElementById("result").classList.add('correct');
-          document.getElementById("result").textContent =
-            "Correct! " + verb.example;
-        } else {
-          document.getElementById("result").classList.add('wrong');
-          document.getElementById("result").textContent =
-            "Wrong. " + verb.example;
-        }
-        document.getElementById("score").textContent = `Score: ${score}`;
-        wipeList();
-        document.querySelectorAll('.mdc-button').forEach((el) => {
-    el.disabled = true;
-    el.classList.add('temporary-disabled');
-  });
-        timeTurnId= setTimeout(loadVerb, 4000);
-      }
-      function wipeList() {
-        if (verbsList.length === 0) {
-          alert("Ya no hay más verbos por seleccionar. Renovando lista...");
-          verbsList = [...originalVerbsList];
-          score = 0; // Renovar la lista con los verbos originales
-        }
-        verbsList.splice(randomIndex, 1);
-      }
+  function checkAnswer(answer) {
 
-      document.getElementById("gerundButton").addEventListener("click", () => checkAnswer("gerund"));
+    const verb = verbsList[randomIndex];
+    if (!verb) { return }
+    document.getElementById("result").classList.remove('correct', 'wrong');
+    if (answer === verb.correct) {
+      score++;
+      document.getElementById("result").classList.add('correct');
+      document.getElementById("result").textContent =
+        "Correct! " + verb.example;
+    } else {
+      document.getElementById("result").classList.add('wrong');
+      document.getElementById("result").textContent =
+        "Wrong. " + verb.example;
+    }
+    if (['give up', 'carry on'].includes(verb.base)) {
+      document.getElementById("dialog-title").textContent = `NOTICE`;
+      document.getElementById("dialog-content").textContent = `All phrasal verbs wich are followed by another verb, e.g. carry on. give up, etc. are followed by the gerund`;
+      dialog.open();
+    } else if (verb.base === ('help')) {
+      document.getElementById("dialog-title").textContent = `NOTICE`;
+      document.getElementById("dialog-content").textContent = `Help can be followed by the infinitive with or without to. The organization I work for helps young people (to) find work abroad`;
+      dialog.open();
+    }
+    document.getElementById("score").textContent = `Score: ${score}`;
+    wipeList();
+    document.querySelectorAll('.mdc-button').forEach((el) => {
+      el.disabled = true;
+      el.classList.add('temporary-disabled');
+    });
+    timeTurnId = setTimeout(loadVerb, 100);
+  }
+  function wipeList() {
+    verbsList.splice(randomIndex, 1);
+    if (verbsList.length === 0) {
+      gameOver();
+
+
+      return true
+    }
+    return false
+  }
+  // Función para mostrar el contenedor
+  function showProgress() {
+    const progressContainer = document.getElementById("progress-container");
+    progressContainer.style.display = "block"; // Muestra el contenedor
+  }
+
+  // Función para ocultar el contenedor
+  function hideProgress() {
+    const progressContainer = document.getElementById("progress-container");
+    progressContainer.style.display = "none"; // Oculta el contenedor
+  }// Función para mostrar el Game Over
+  function gameOver() {
+
+    isGameOverDialog = true;
+    const percent = ((score / originalVerbsList.length) * 100).toFixed(2);
+
+    showProgress();
+    document.getElementById("dialog-title").textContent = "GAME OVER!";
+    document.getElementById("dialog-content").textContent = `Score: ${score} out of ${originalVerbsList.length} (${percent}%)`;
+    document.getElementById("restart-button").textContent = "Reiniciar"; // Cambiamos el texto del botón a "Reiniciar"
+    document.getElementById("progressBar").value = percent;
+    document.getElementById("progressText").textContent = `${percent}%`;
+    dialog.open(); // Mostramos el diálogo de Game Over
+
+  }
+
+  document.getElementById("gerundButton").addEventListener("click", () => checkAnswer("gerund"));
   document.getElementById("infinitiveButton").addEventListener("click", () => checkAnswer("infinitive"));
   document.getElementById("infinitiveWithoutToButton").addEventListener("click", () => checkAnswer("infinitive_without_to"));
+  document.getElementById("infinitiveWith&WithoutToButton").addEventListener("click", () => checkAnswer("infinitiveWith&WithoutTo"));
   window.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.mdc-button').forEach((el) => {
       mdc.ripple.MDCRipple.attachTo(el);
     });
   });
-      loadVerb();
-    </script>
-  </body>
+
+  loadVerb();
+</script>
+</body>
+
 </html>
