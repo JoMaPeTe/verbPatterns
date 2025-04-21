@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Verb Practice Flashcards</title>
+    <link rel="icon" href="./favicon.ico" type="image/x-icon">
+     <!-- Material Design CSS -->
+     <link rel="stylesheet" href="./style.css">
+     <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
+      <link href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css" rel="stylesheet">
+      <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+
+</head>
+<body>
+  
+  <header class="mdc-top-app-bar">
+    <div class="mdc-top-app-bar__row">
+      <section class="mdc-top-app-bar__section"  >
+        <span class="mdc-top-app-bar__title">Verb Pattern Flashcards</span>
+      </section>
+    </div>
+  </header>
+
+  <!-- Contenido Principal -->
+  <main class="mdc-top-app-bar--fixed-adjust">
+
+  <div class="card" id="verb">Loading...</div>
+  <div class="result" id="result"></div>
+  
+  <div class="buttons">
+    <div class="mdc-touch-target-wrapper">
+      <button class="mdc-button mdc-button--touch mdc-button--raised" id="gerundButton">
+        <span class="mdc-button__ripple"></span>
+        <span class="mdc-button__touch"></span>
+        <span class="mdc-button__label">+ing</span>
+      </button>
+    </div>
+    <div class="mdc-touch-target-wrapper">
+      <button class="mdc-button mdc-button--touch mdc-button--raised" id="infinitiveButton" >
+        <span class="mdc-button__ripple"></span>
+        <span class="mdc-button__touch"></span>
+        <span class="mdc-button__label">to + verb</span>
+      </button>
+    </div>
+    <div class="mdc-touch-target-wrapper">
+      <button class="mdc-button mdc-button--touch mdc-button--raised" id="infinitiveWithoutToButton">
+        <span class="mdc-button__ripple"></span>
+        <span class="mdc-button__touch"></span>
+        <span class="mdc-button__label">bare infinitive</span>
+      </button>
+    </div>
+  </div>
+  <div class="score" id="score">Score: 0</div>
+</main>
+<footer class="footer">@jomapete projects</footer>
+</body>
+
+
+    <script type="module" >
+    import originalVerbsList from './verblist.js';
+     
+      let randomIndex = 0;
+      let score = 0;
+     
+      let verbsList = [...originalVerbsList]; // Copiar la lista original
+      let timeTurnId;
+      // Función para obtener un verbo aleatorio sin repeticiones
+      function getRandomIndex() {
+        return Math.floor(Math.random() * verbsList.length);
+      }
+      function setTurnIndex() {
+        randomIndex = getRandomIndex();
+      }
+
+      function loadVerb() {
+        setTurnIndex();
+        const verb = verbsList[randomIndex];
+        document.getElementById("verb").textContent = verb.base;
+        document.getElementById("result").textContent = "";
+        document.querySelectorAll('.mdc-button').forEach((el) => {
+    el.disabled = false;
+    el.classList.remove('temporary-disabled');
+  });
+      clearTimeout(timeTurnId)
+
+      }
+
+      function checkAnswer(answer) {
+
+        const verb = verbsList[randomIndex];
+    
+        document.getElementById("result").classList.remove('correct', 'wrong');
+        if (answer === verb.correct) {
+          score++;
+          document.getElementById("result").classList.add('correct');
+          document.getElementById("result").textContent =
+            "Correct! " + verb.example;
+        } else {
+          document.getElementById("result").classList.add('wrong');
+          document.getElementById("result").textContent =
+            "Wrong. " + verb.example;
+        }
+        document.getElementById("score").textContent = `Score: ${score}`;
+        wipeList();
+        document.querySelectorAll('.mdc-button').forEach((el) => {
+    el.disabled = true;
+    el.classList.add('temporary-disabled');
+  });
+        timeTurnId= setTimeout(loadVerb, 4000);
+      }
+      function wipeList() {
+        if (verbsList.length === 0) {
+          alert("Ya no hay más verbos por seleccionar. Renovando lista...");
+          verbsList = [...originalVerbsList];
+          score = 0; // Renovar la lista con los verbos originales
+        }
+        verbsList.splice(randomIndex, 1);
+      }
+
+      document.getElementById("gerundButton").addEventListener("click", () => checkAnswer("gerund"));
+  document.getElementById("infinitiveButton").addEventListener("click", () => checkAnswer("infinitive"));
+  document.getElementById("infinitiveWithoutToButton").addEventListener("click", () => checkAnswer("infinitive_without_to"));
+  window.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.mdc-button').forEach((el) => {
+      mdc.ripple.MDCRipple.attachTo(el);
+    });
+  });
+      loadVerb();
+    </script>
+  </body>
+</html>
