@@ -52,7 +52,19 @@
       </div>
       <div class="mdc-dialog__scrim"></div>
     </div>
-    <div class="card" id="verb">Loading...</div>
+ 
+    <div class="mdc-card"> 
+    <div class="mdc-card__primary-action">
+      <div class="mdc-card__ripple"></div>
+  
+      <!-- Envolver contenido con padding -->
+      <div class="content-wrapper">
+        <h2 class="mdc-typography--headline4" id="verb">Loading...</h2>
+        <p class="mdc-typography--body3" id="fillBlank">Aquí va el contenido de la tarjeta.</p>
+      </div>
+    </div>
+  </div>
+    
     <div class="result" id="result"></div>
 
     <div class="buttons">
@@ -83,7 +95,7 @@
         <button class="mdc-button mdc-button--touch mdc-button--raised" id="infinitiveWith&WithoutToButton">
           <span class="mdc-button__ripple"></span>
           <span class="mdc-button__touch"></span>
-          <span class="mdc-button__label">inf With/Without</span>
+          <span class="mdc-button__label">inf With/Without to</span>
         </button>
       </div>
 
@@ -130,6 +142,7 @@
     setTurnIndex();
     const verb = verbsList[randomIndex];
     document.getElementById("verb").textContent = verb?.base ?? "FIN";
+    document.getElementById("fillBlank").textContent = verb?.fillBlank ?? "";
     document.getElementById("result").textContent = "";
     document.querySelectorAll('.mdc-button').forEach((el) => {
       el.disabled = false;
