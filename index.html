@@ -52,55 +52,62 @@
       </div>
       <div class="mdc-dialog__scrim"></div>
     </div>
- 
-    <div class="mdc-card"> 
-    <div class="mdc-card__primary-action">
-      <div class="mdc-card__ripple"></div>
-  
-      <!-- Envolver contenido con padding -->
-      <div class="content-wrapper">
-        <h2 class="mdc-typography--headline4" id="verb">Loading...</h2>
-        <p class="mdc-typography--body3" id="fillBlank">Aquí va el contenido de la tarjeta.</p>
-      </div>
-    </div>
-  </div>
-    
-    <div class="result" id="result"></div>
+    <div class="container">
+      <div class="mdc-card">
+        <div class="mdc-card__primary-action">
+          <div class="mdc-card__ripple"></div>
 
-    <div class="buttons">
-      <div class="mdc-touch-target-wrapper">
-        <button class="mdc-button mdc-button--touch mdc-button--raised" id="gerundButton">
-          <span class="mdc-button__ripple"></span>
-          <span class="mdc-button__touch"></span>
-          <span class="mdc-button__label">+ing</span>
-        </button>
-      </div>
-      <div class="mdc-touch-target-wrapper">
-        <button class="mdc-button mdc-button--touch mdc-button--raised" id="infinitiveButton">
-          <span class="mdc-button__ripple"></span>
-          <span class="mdc-button__touch"></span>
-          <span class="mdc-button__label">to + infinitive</span>
-        </button>
-      </div>
-    </div>
-    <div class="buttons">
-      <div class="mdc-touch-target-wrapper">
-        <button class="mdc-button mdc-button--touch mdc-button--raised" id="infinitiveWithoutToButton">
-          <span class="mdc-button__ripple"></span>
-          <span class="mdc-button__touch"></span>
-          <span class="mdc-button__label">bare infinitive</span>
-        </button>
-      </div>
-      <div class="mdc-touch-target-wrapper">
-        <button class="mdc-button mdc-button--touch mdc-button--raised" id="infinitiveWith&WithoutToButton">
-          <span class="mdc-button__ripple"></span>
-          <span class="mdc-button__touch"></span>
-          <span class="mdc-button__label">inf With/Without to</span>
-        </button>
+          <!-- Envolver contenido con padding -->
+          <div class="mdc-card__content" style="padding: 16px;">
+            <h2 class="mdc-typography--headline4" id="verb">Loading...</h2>
+            <p class="mdc-typography--body2" id="fillBlank">Aquí va el contenido de la tarjeta.</p>
+
+          </div>
+        </div>
+        <div class="mdc-card__actions">
+       
+            <div class="result" id="result"></div>
+          
+        </div>
       </div>
 
+
+
+      <div class="buttons">
+        <div class="mdc-touch-target-wrapper">
+          <button class="mdc-button mdc-button--touch mdc-button--raised" id="gerundButton">
+            <span class="mdc-button__ripple"></span>
+            <span class="mdc-button__touch"></span>
+            <span class="mdc-button__label">+ing</span>
+          </button>
+        </div>
+        <div class="mdc-touch-target-wrapper">
+          <button class="mdc-button mdc-button--touch mdc-button--raised" id="infinitiveButton">
+            <span class="mdc-button__ripple"></span>
+            <span class="mdc-button__touch"></span>
+            <span class="mdc-button__label">to + infinitive</span>
+          </button>
+        </div>
+      </div>
+      <div class="buttons">
+        <div class="mdc-touch-target-wrapper">
+          <button class="mdc-button mdc-button--touch mdc-button--raised" id="infinitiveWithoutToButton">
+            <span class="mdc-button__ripple"></span>
+            <span class="mdc-button__touch"></span>
+            <span class="mdc-button__label">bare infinitive</span>
+          </button>
+        </div>
+        <div class="mdc-touch-target-wrapper">
+          <button class="mdc-button mdc-button--touch mdc-button--raised" id="infinitiveWith&WithoutToButton">
+            <span class="mdc-button__ripple"></span>
+            <span class="mdc-button__touch"></span>
+            <span class="mdc-button__label">inf With/Without to</span>
+          </button>
+        </div>
+
+      </div>
+      <div class="score" id="score">Score: 0</div>
     </div>
-    <div class="score" id="score">Score: 0</div>
   </main>
   <footer class="footer">@jomapete projects</footer>
 </body>
@@ -153,37 +160,37 @@
   }
   function showDialog(title, content) {
     return new Promise((resolve) => {
-        const dialogTitle = document.getElementById("dialog-title");
-        const dialogContent = document.getElementById("dialog-content");
-        const closeButton = document.getElementById("dialog-close");
+      const dialogTitle = document.getElementById("dialog-title");
+      const dialogContent = document.getElementById("dialog-content");
+      const closeButton = document.getElementById("dialog-close");
 
-        dialogTitle.textContent = title;
-        dialogContent.textContent = content;
+      dialogTitle.textContent = title;
+      dialogContent.textContent = content;
 
-        dialog.open(); // o dialog.showModal() según el componente
+      dialog.open(); // o dialog.showModal() según el componente
 
-        const onClose = () => {
-      dialog.unlisten('MDCDialog:closed', onClose);
-      resolve();
-    };
+      const onClose = () => {
+        dialog.unlisten('MDCDialog:closed', onClose);
+        resolve();
+      };
 
-    dialog.listen('MDCDialog:closed', onClose);
+      dialog.listen('MDCDialog:closed', onClose);
     });
-}
+  }
   async function checkAnswer(answer) {
     const verb = verbsList[randomIndex];
     if (!verb) { return }
-    
+
     if (['give up', 'carry on'].includes(verb.base)) {
       await showDialog(
-            "NOTICE",
-            "All phrasal verbs which are followed by another verb, e.g. carry on, give up, etc. are followed by the gerund."
-        );
+        "NOTICE",
+        "All phrasal verbs which are followed by another verb, e.g. carry on, give up, etc. are followed by the gerund."
+      );
     } else if (verb.base === ('help')) {
       await showDialog(
-            "NOTICE",
-            "Help can be followed by the infinitive with or without to. The organization I work for helps young people (to) find work abroad."
-        );
+        "NOTICE",
+        "Help can be followed by the infinitive with or without to. The organization I work for helps young people (to) find work abroad."
+      );
     }
     if (answer === verb.correct) {
       document.getElementById("result").classList.add('correct');
@@ -200,15 +207,15 @@
       el.disabled = true;
       el.classList.add('temporary-disabled');
     });
-    const lastVerb =wipeList();
-    if(lastVerb){
+    const lastVerb = wipeList();
+    if (lastVerb) {
       await gameOver()
     }
-      timeTurnId = setTimeout(loadVerb, 2500);
-    }
-    
-  
-   function wipeList() {
+    timeTurnId = setTimeout(loadVerb, 2500);
+  }
+
+
+  function wipeList() {
     verbsList.splice(randomIndex, 1);
     if (verbsList.length === 0) {
       return true
@@ -228,33 +235,33 @@
   }// Función para mostrar el Game Over
   async function gameOver() {
     return new Promise((resolve) => {
-    isGameOverDialog = true;
-    const percent = ((score / originalVerbsList.length) * 100).toFixed(2);
-    const restartButton = document.getElementById("restart-button");
-    showProgress();
-    document.getElementById("dialog-title").textContent = "GAME OVER!";
-    document.getElementById("dialog-content").textContent = `Score: ${score} out of ${originalVerbsList.length} (${percent}%)`;
-    restartButton.textContent = "Reiniciar"; // Cambiamos el texto del botón a "Reiniciar"
-    document.getElementById("progressBar").value = percent;
-    document.getElementById("progressText").textContent = `${percent}%`;
-   
-   
-    restartButton.style.display = "inline-block";
-    restartButton.disabled = false;
-    restartButton.setAttribute("tabindex", "0");
+      isGameOverDialog = true;
+      const percent = ((score / originalVerbsList.length) * 100).toFixed(2);
+      const restartButton = document.getElementById("restart-button");
+      showProgress();
+      document.getElementById("dialog-title").textContent = "GAME OVER!";
+      document.getElementById("dialog-content").textContent = `Score: ${score} out of ${originalVerbsList.length} (${percent}%)`;
+      restartButton.textContent = "Reiniciar"; // Cambiamos el texto del botón a "Reiniciar"
+      document.getElementById("progressBar").value = percent;
+      document.getElementById("progressText").textContent = `${percent}%`;
 
-    const dialogEl = document.querySelector("#dialog-close");
-    dialogEl.style.display = "block";
-    dialogEl.style.visibility = "visible";
-    setTimeout(() => {
-      dialog.open();
-    }, 2000);
-    const onClose = () => {
-      dialog.unlisten('MDCDialog:closed', onClose);
-      resolve();
-    };
 
-    dialog.listen('MDCDialog:closed', onClose);
+      restartButton.style.display = "inline-block";
+      restartButton.disabled = false;
+      restartButton.setAttribute("tabindex", "0");
+
+      const dialogEl = document.querySelector("#dialog-close");
+      dialogEl.style.display = "block";
+      dialogEl.style.visibility = "visible";
+      setTimeout(() => {
+        dialog.open();
+      }, 2000);
+      const onClose = () => {
+        dialog.unlisten('MDCDialog:closed', onClose);
+        resolve();
+      };
+
+      dialog.listen('MDCDialog:closed', onClose);
     });
   }
 
